@@ -1,0 +1,5 @@
+--cpu ARM920T ".\nor flash\s3c2410a.o" ".\nor flash\main.o" ".\nor flash\arp.o" ".\nor flash\dm9000dbg.o" ".\nor flash\eth.o" ".\nor flash\icmp.o" ".\nor flash\ip.o" ".\nor flash\skbuff.o" ".\nor flash\tftp.o" ".\nor flash\tftpmain.o" ".\nor flash\tftpput.o" ".\nor flash\udp.o" ".\nor flash\2410lib.o" ".\nor flash\sys_init.o" 
+--strict --scatter ".\NOR FLASH\TFTP_Test.sct" 
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\NOR FLASH\TFTP_Test.map" -o ".\NOR FLASH\TFTP_Test.axf"

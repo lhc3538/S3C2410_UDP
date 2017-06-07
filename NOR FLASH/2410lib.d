@@ -1,0 +1,13 @@
+.\NOR FLASH\2410lib.o: ..\common\src\2410lib.c
+.\NOR FLASH\2410lib.o: C:\Keil\ARM\ARMCC\bin\..\include\stdarg.h
+.\NOR FLASH\2410lib.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\NOR FLASH\2410lib.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\NOR FLASH\2410lib.o: C:\Keil\ARM\ARMCC\bin\..\include\ctype.h
+.\NOR FLASH\2410lib.o: C:\Keil\ARM\ARMCC\bin\..\include\stdlib.h
+.\NOR FLASH\2410lib.o: ..\Common\Inc\2410lib.h
+.\NOR FLASH\2410lib.o: ..\Common\Inc\def.h
+.\NOR FLASH\2410lib.o: ..\Common\Inc\memcfg.h
+.\NOR FLASH\2410lib.o: ..\Common\Inc\option.h
+.\NOR FLASH\2410lib.o: ..\Common\Inc\register.h
+.\NOR FLASH\2410lib.o: ..\Common\Inc\2410addr.h
+.\NOR FLASH\2410lib.o: ..\Common\Inc\2410slib.h

@@ -1,0 +1,11 @@
+.\NOR FLASH\sys_init.o: ..\common\src\sys_init.c
+.\NOR FLASH\sys_init.o: C:\Keil\ARM\ARMCC\bin\..\include\stdarg.h
+.\NOR FLASH\sys_init.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\NOR FLASH\sys_init.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\NOR FLASH\sys_init.o: C:\Keil\ARM\ARMCC\bin\..\include\ctype.h
+.\NOR FLASH\sys_init.o: ..\Common\Inc\2410lib.h
+.\NOR FLASH\sys_init.o: ..\Common\Inc\def.h
+.\NOR FLASH\sys_init.o: ..\Common\Inc\memcfg.h
+.\NOR FLASH\sys_init.o: ..\Common\Inc\option.h
+.\NOR FLASH\sys_init.o: ..\Common\Inc\register.h
+.\NOR FLASH\sys_init.o: ..\Common\Inc\2410addr.h

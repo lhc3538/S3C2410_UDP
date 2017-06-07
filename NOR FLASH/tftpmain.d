@@ -1,0 +1,14 @@
+.\NOR FLASH\tftpmain.o: Source\tftp\tftpmain.c
+.\NOR FLASH\tftpmain.o: .\Inc\changeformat.h
+.\NOR FLASH\tftpmain.o: .\Inc\tftp\skbuff.h
+.\NOR FLASH\tftpmain.o: .\Inc\tftp\eth.h
+.\NOR FLASH\tftpmain.o: .\Inc\tftp\arp.h
+.\NOR FLASH\tftpmain.o: .\Inc\tftp\ip.h
+.\NOR FLASH\tftpmain.o: .\Inc\tftp\udp.h
+.\NOR FLASH\tftpmain.o: .\Inc\utils.h
+.\NOR FLASH\tftpmain.o: ..\Common\Inc\2410lib.h
+.\NOR FLASH\tftpmain.o: ..\Common\Inc\def.h
+.\NOR FLASH\tftpmain.o: ..\Common\Inc\memcfg.h
+.\NOR FLASH\tftpmain.o: ..\Common\Inc\option.h
+.\NOR FLASH\tftpmain.o: ..\Common\Inc\register.h
+.\NOR FLASH\tftpmain.o: ..\Common\Inc\2410addr.h

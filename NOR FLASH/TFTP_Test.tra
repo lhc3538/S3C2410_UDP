@@ -1,0 +1,33 @@
+*** Creating Trace Output File '.\NOR FLASH\TFTP_Test.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\nor flash\s3c2410a.o"'
+### List of Objects: adding '".\nor flash\main.o"'
+### List of Objects: adding '".\nor flash\arp.o"'
+### List of Objects: adding '".\nor flash\dm9000dbg.o"'
+### List of Objects: adding '".\nor flash\eth.o"'
+### List of Objects: adding '".\nor flash\icmp.o"'
+### List of Objects: adding '".\nor flash\ip.o"'
+### List of Objects: adding '".\nor flash\skbuff.o"'
+### List of Objects: adding '".\nor flash\tftp.o"'
+### List of Objects: adding '".\nor flash\tftpmain.o"'
+### List of Objects: adding '".\nor flash\tftpput.o"'
+### List of Objects: adding '".\nor flash\udp.o"'
+### List of Objects: adding '".\nor flash\2410lib.o"'
+### List of Objects: adding '".\nor flash\sys_init.o"'
+### ADS-LD Command completed:
+--cpu ARM920T ".\nor flash\s3c2410a.o" ".\nor flash\main.o" ".\nor flash\arp.o" ".\nor flash\dm9000dbg.o" ".\nor flash\eth.o" ".\nor flash\icmp.o" ".\nor flash\ip.o" ".\nor flash\skbuff.o" ".\nor flash\tftp.o" ".\nor flash\tftpmain.o" ".\nor flash\tftpput.o" ".\nor flash\udp.o" ".\nor flash\2410lib.o" ".\nor flash\sys_init.o" 
+--strict --scatter ".\NOR FLASH\TFTP_Test.sct" 
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\NOR FLASH\TFTP_Test.map" -o ".\NOR FLASH\TFTP_Test.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\NOR FLASH\TFTP_Test.axf'
+### ADS-LD Command File: '.\NOR FLASH\TFTP_Test.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\NOR FLASH\TFTP_Test.lnp', Handle=0x0000037C
+### Writing '.lnp' file
+### ADS-LD Command file '.\NOR FLASH\TFTP_Test.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.
