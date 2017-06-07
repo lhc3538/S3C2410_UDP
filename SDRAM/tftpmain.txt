@@ -68,31 +68,31 @@
                           ENDP
 
                   net_handle PROC
-;;;16     
-;;;17     int net_handle(void)
+;;;17     
+;;;18     int net_handle(void)
 00006c  e92d4070          PUSH     {r4-r6,lr}
-;;;18     {
-;;;19     	struct sk_buff *skb;
-;;;20     	struct ethhdr *eth_hdr;												
-;;;21     	skb = alloc_skb(ETH_FRAME_LEN);
-000070  e59f01b0          LDR      r0,|L1.552|
+;;;19     {
+;;;20     	struct sk_buff *skb;
+;;;21     	struct ethhdr *eth_hdr;												
+;;;22     	skb = alloc_skb(ETH_FRAME_LEN);
+000070  e59f02d4          LDR      r0,|L1.844|
 000074  ebfffffe          BL       alloc_skb
 000078  e1a05000          MOV      r5,r0
-;;;22     
-;;;23     	if (eth_rcv(skb) != -1) 
+;;;23     
+;;;24     	if (eth_rcv(skb) != -1) 
 00007c  e1a00005          MOV      r0,r5
 000080  ebfffffe          BL       eth_rcv
 000084  e3700001          CMN      r0,#1
 000088  0a000015          BEQ      |L1.228|
-;;;24     	{
-;;;25     
-;;;26     		eth_hdr = (struct ethhdr *)(skb->data);					
+;;;25     	{
+;;;26     
+;;;27     		eth_hdr = (struct ethhdr *)(skb->data);					
 00008c  e59545f0          LDR      r4,[r5,#0x5f0]
-;;;27     		skb_pull(skb, ETH_HLEN);
+;;;28     		skb_pull(skb, ETH_HLEN);
 000090  e3a0100e          MOV      r1,#0xe
 000094  e1a00005          MOV      r0,r5
 000098  ebfffffe          BL       skb_pull
-;;;28     		if (ntohs(eth_hdr->h_proto) == ETH_P_ARP)
+;;;29     		if (ntohs(eth_hdr->h_proto) == ETH_P_ARP)
 00009c  e5d4100d          LDRB     r1,[r4,#0xd]
 0000a0  e5d4200c          LDRB     r2,[r4,#0xc]
 0000a4  e1820401          ORR      r0,r2,r1,LSL #8
@@ -100,476 +100,425 @@
 0000ac  e2401b02          SUB      r1,r0,#0x800
 0000b0  e2511006          SUBS     r1,r1,#6
 0000b4  1a000002          BNE      |L1.196|
-;;;29     		{
-;;;30     			arp_rcv_packet(skb);
+;;;30     		{
+;;;31     			arp_rcv_packet(skb);
 0000b8  e1a00005          MOV      r0,r5
 0000bc  ebfffffe          BL       arp_rcv_packet
 0000c0  ea000007          B        |L1.228|
                   |L1.196|
-;;;31     
-;;;32     		}
-;;;33     
-;;;34     		else if(ntohs(eth_hdr->h_proto) == ETH_P_IP)						
+;;;32     
+;;;33     		}
+;;;34     
+;;;35     		else if(ntohs(eth_hdr->h_proto) == ETH_P_IP)						
 0000c4  e5d4100d          LDRB     r1,[r4,#0xd]
 0000c8  e5d4200c          LDRB     r2,[r4,#0xc]
 0000cc  e1820401          ORR      r0,r2,r1,LSL #8
 0000d0  ebfffffe          BL       ntohs
 0000d4  e3500b02          CMP      r0,#0x800
 0000d8  1a000001          BNE      |L1.228|
-;;;35     		{
-;;;36     
-;;;37     		 	ip_rcv_packet(skb);
+;;;36     		{
+;;;37     
+;;;38     		 	ip_rcv_packet(skb);
 0000dc  e1a00005          MOV      r0,r5
 0000e0  ebfffffe          BL       ip_rcv_packet
                   |L1.228|
-;;;38     
-;;;39     		}
-;;;40     	 	
-;;;41     	}
-;;;42     
-;;;43     	free_skb(skb);
+;;;39     
+;;;40     		}
+;;;41     	 	
+;;;42     	}
+;;;43     
+;;;44     	free_skb(skb);
 0000e4  e1a00005          MOV      r0,r5
 0000e8  ebfffffe          BL       free_skb
-;;;44     
-;;;45     	return 0;
+;;;45     
+;;;46     	return 0;
 0000ec  e3a00000          MOV      r0,#0
 0000f0  e8bd4070          POP      {r4-r6,lr}
-;;;46     }
+;;;47     }
 0000f4  e12fff1e          BX       lr
-;;;47     
+;;;48     
                           ENDP
 
                   NetLoadFile PROC
-;;;56     
-;;;57     int NetLoadFile(UINT32T addr, UINT32T give_ip, UINT32T a3, UINT32T a4)
+;;;57     
+;;;58     int NetLoadFile(UINT32T addr, UINT32T give_ip, UINT32T a3, UINT32T a4)
 0000f8  e92d41ff          PUSH     {r0-r8,lr}
-;;;58     {
+;;;59     {
 0000fc  e24dd018          SUB      sp,sp,#0x18
 000100  e1a06000          MOV      r6,r0
 000104  e1a07002          MOV      r7,r2
 000108  e1a08003          MOV      r8,r3
-;;;59     	struct sk_buff *skb = alloc_skb(ETH_FRAME_LEN);
-00010c  e59f0114          LDR      r0,|L1.552|
+;;;60     	struct sk_buff *skb = alloc_skb(ETH_FRAME_LEN);
+00010c  e59f0238          LDR      r0,|L1.844|
 000110  ebfffffe          BL       alloc_skb
-000114  e1a04000          MOV      r4,r0
-;;;60     	unsigned char eth_addr[ETH_ALEN];	
-;;;61     	unsigned char *s;
-;;;62     	int i;
-;;;63     	char *p;
-;;;64     	give_ip = LOCAL_IP_ADDR;
-000118  e59f010c          LDR      r0,|L1.556|
+000114  e1a05000          MOV      r5,r0
+;;;61     	unsigned char eth_addr[ETH_ALEN];	
+;;;62     	unsigned char *s;
+;;;63     	int i;
+;;;64     	unsigned char *p;
+;;;65     	give_ip = LOCAL_IP_ADDR;
+000118  e59f0230          LDR      r0,|L1.848|
 00011c  e58d001c          STR      r0,[sp,#0x1c]
-;;;65     	s = (unsigned char *)&give_ip;
-000120  e28d501c          ADD      r5,sp,#0x1c
-;;;66     	
-;;;67     	uart_printf("Mini TFTP Server 1.0 (IP : %d.%d.%d.%d PORT: %d)\n", s[3], s[2], s[1], s[0], TFTP);		
+;;;66     	s = (unsigned char *)&give_ip;
+000120  e28d401c          ADD      r4,sp,#0x1c
+;;;67     	
+;;;68     	uart_printf("Mini TFTP Server 1.0 (IP : %d.%d.%d.%d PORT: %d)\n", s[3], s[2], s[1], s[0], TFTP);		
 000124  e3a01045          MOV      r1,#0x45
-000128  e5d50000          LDRB     r0,[r5,#0]
+000128  e5d40000          LDRB     r0,[r4,#0]
 00012c  e88d0003          STM      sp,{r0,r1}
-000130  e5d53001          LDRB     r3,[r5,#1]
-000134  e5d52002          LDRB     r2,[r5,#2]
-000138  e5d51003          LDRB     r1,[r5,#3]
-00013c  e28f00ec          ADR      r0,|L1.560|
+000130  e5d43001          LDRB     r3,[r4,#1]
+000134  e5d42002          LDRB     r2,[r4,#2]
+000138  e5d41003          LDRB     r1,[r4,#3]
+00013c  e28f0e21          ADR      r0,|L1.852|
 000140  ebfffffe          BL       uart_printf
-;;;68     	uart_printf("Type tftp -i %d.%d.%d.%d put filename at the host PC\n", s[3], s[2], s[1], s[0]);
-000144  e5d50000          LDRB     r0,[r5,#0]
+;;;69     	uart_printf("Type tftp -i %d.%d.%d.%d put filename at the host PC\n", s[3], s[2], s[1], s[0]);
+000144  e5d40000          LDRB     r0,[r4,#0]
 000148  e58d0000          STR      r0,[sp,#0]
-00014c  e5d53001          LDRB     r3,[r5,#1]
-000150  e5d52002          LDRB     r2,[r5,#2]
-000154  e5d51003          LDRB     r1,[r5,#3]
-000158  e28f0f41          ADR      r0,|L1.612|
+00014c  e5d43001          LDRB     r3,[r4,#1]
+000150  e5d42002          LDRB     r2,[r4,#2]
+000154  e5d41003          LDRB     r1,[r4,#3]
+000158  e28f0f8a          ADR      r0,|L1.904|
 00015c  ebfffffe          BL       uart_printf
-;;;69     
-;;;70     	eth_init();		
+;;;70     
+;;;71     	eth_init();		
 000160  ebfffffe          BL       eth_init
-;;;71     	eth_get_addr(eth_addr);		
+;;;72     	eth_get_addr(eth_addr);		
 000164  e28d0010          ADD      r0,sp,#0x10
 000168  ebfffffe          BL       eth_get_addr
-;;;72     	ip_init(give_ip);
+;;;73     	ip_init(give_ip);
 00016c  e59d001c          LDR      r0,[sp,#0x1c]
 000170  ebfffffe          BL       ip_init
-;;;73     	udp_init();
+;;;74     	udp_init();
 000174  ebfffffe          BL       udp_init
-;;;74     		
-;;;75     	
-;;;76     	arp_add_entry(eth_addr, give_ip);	
+;;;75     		
+;;;76     	
+;;;77     	arp_add_entry(eth_addr, give_ip);	
 000178  e59d101c          LDR      r1,[sp,#0x1c]
 00017c  e28d0010          ADD      r0,sp,#0x10
 000180  ebfffffe          BL       arp_add_entry
-;;;77     	
 ;;;78     	
-;;;79     
-;;;80     		net_handle();
+;;;79     	
+;;;80     
+;;;81     		net_handle();
 000184  ebfffffe          BL       net_handle
-;;;81     		udp_skb_reserve(skb);
-000188  e1a00004          MOV      r0,r4
+;;;82     		//change data p
+;;;83     		udp_skb_reserve(skb);
+000188  e1a00005          MOV      r0,r5
 00018c  ebfffffe          BL       udp_skb_reserve
-;;;82     		(*skb->data) = 'l';
+;;;84     		(*skb->data) = 'l';
 000190  e3a0006c          MOV      r0,#0x6c
-000194  e59415f0          LDR      r1,[r4,#0x5f0]
+000194  e59515f0          LDR      r1,[r5,#0x5f0]
 000198  e5c10000          STRB     r0,[r1,#0]
-;;;83     		
-;;;84     		uart_printf("udp send pad: %s\n",skb->pad);
-00019c  e1a01004          MOV      r1,r4
-0001a0  e28f00f4          ADR      r0,|L1.668|
+;;;85     		
+;;;86     		uart_printf("udp send pad: %s\n",skb->pad);
+00019c  e1a01005          MOV      r1,r5
+0001a0  e28f0f86          ADR      r0,|L1.960|
 0001a4  ebfffffe          BL       uart_printf
-;;;85     		uart_printf("udp send buf: %s\n",skb->buf);
-0001a8  e2841002          ADD      r1,r4,#2
-0001ac  e28f00fc          ADR      r0,|L1.688|
+;;;87     		uart_printf("udp send buf: %s\n",skb->buf);
+0001a8  e2851002          ADD      r1,r5,#2
+0001ac  e28f0e22          ADR      r0,|L1.980|
 0001b0  ebfffffe          BL       uart_printf
-;;;86     		uart_printf("udp send truesize: %d\n",skb->truesize);
-0001b4  e28f0f42          ADR      r0,|L1.708|
-0001b8  e59415ec          LDR      r1,[r4,#0x5ec]
+;;;88     		uart_printf("udp send truesize: %d\n",skb->truesize);
+0001b4  e28f0f8b          ADR      r0,|L1.1000|
+0001b8  e59515ec          LDR      r1,[r5,#0x5ec]
 0001bc  ebfffffe          BL       uart_printf
-;;;87     		uart_printf("udp send data: %s\n",skb->data);
-0001c0  e28f0f45          ADR      r0,|L1.732|
-0001c4  e59415f0          LDR      r1,[r4,#0x5f0]
+;;;89     		uart_printf("udp send data: %s\n",skb->data);
+0001c0  e28f0f8e          ADR      r0,|L1.1024|
+0001c4  e59515f0          LDR      r1,[r5,#0x5f0]
 0001c8  ebfffffe          BL       uart_printf
-;;;88     		uart_printf("udp send len: %d\n\n",skb->len);
-0001cc  e28f0f47          ADR      r0,|L1.752|
-0001d0  e59415f4          LDR      r1,[r4,#0x5f4]
+;;;90     		uart_printf("udp send len: %d\n\n",skb->len);
+0001cc  e28f0d09          ADR      r0,|L1.1044|
+0001d0  e59515f4          LDR      r1,[r5,#0x5f4]
 0001d4  ebfffffe          BL       uart_printf
-;;;89     		udp_send(skb, 3232236098, UDP, 3538);	//192.168.2.66:3538
-0001d8  e59f3124          LDR      r3,|L1.772|
+;;;91     		udp_send(skb, 3232236098, UDP, 3538);	//192.168.2.66:3538
+0001d8  e59f3248          LDR      r3,|L1.1064|
 0001dc  e3a02011          MOV      r2,#0x11
-0001e0  e59f1120          LDR      r1,|L1.776|
-0001e4  e1a00004          MOV      r0,r4
+0001e0  e59f1244          LDR      r1,|L1.1068|
+0001e4  e1a00005          MOV      r0,r5
 0001e8  ebfffffe          BL       udp_send
-;;;90     		
-;;;91                
-;;;92     	uart_printf("\n Display current Date and time: \n");
-0001ec  e28f0f46          ADR      r0,|L1.780|
+;;;92     		
+;;;93                
+;;;94     	uart_printf("\n Display current Date and time: \n");
+0001ec  e28f0f8f          ADR      r0,|L1.1072|
 0001f0  ebfffffe          BL       uart_printf
-;;;93     
-;;;94     	rRTCCON = 0x01;					// No reset, Merge BCD counters, 1/32768, RTC Control enable
+;;;95     
+;;;96     	rRTCCON = 0x01;					// No reset, Merge BCD counters, 1/32768, RTC Control enable
 0001f4  e3a00001          MOV      r0,#1
 0001f8  e3a01457          MOV      r1,#0x57000000
 0001fc  e5c10040          STRB     r0,[r1,#0x40]
-;;;95     	uart_printf(" Press any key to exit.\n");
-000200  e28f0f4a          ADR      r0,|L1.816|
+;;;97     	uart_printf(" Press any key to exit.\n");
+000200  e28f0f93          ADR      r0,|L1.1108|
 000204  ebfffffe          BL       uart_printf
-;;;96     
-;;;97                 if(rBCDYEAR == 0x99) 
+;;;98     
+;;;99                 g_nYear =rBCDYEAR;
 000208  e3a00457          MOV      r0,#0x57000000
 00020c  e5d00088          LDRB     r0,[r0,#0x88]
-000210  e3500099          CMP      r0,#0x99
-000214  1a00004e          BNE      |L1.852|
-;;;98                     g_nYear = 0x1999;
-000218  e59f012c          LDR      r0,|L1.844|
-00021c  e59f112c          LDR      r1,|L1.848|
-000220  e5810000          STR      r0,[r1,#0]  ; g_nYear
-000224  ea00004f          B        |L1.872|
-                  |L1.552|
-                          DCD      0x000005ea
-                  |L1.556|
-                          DCD      0xc0a8026f
-                  |L1.560|
-000230  4d696e69          DCB      "Mini TFTP Server 1.0 (IP : %d.%d.%d.%d PORT: %d)\n",0
-000234  20544654
-000238  50205365
-00023c  72766572
-000240  20312e30
-000244  20284950
-000248  203a2025
-00024c  642e2564
-000250  2e25642e
-000254  25642050
-000258  4f52543a
-00025c  20256429
-000260  0a00    
-000262  00                DCB      0
-000263  00                DCB      0
-                  |L1.612|
-000264  54797065          DCB      "Type tftp -i %d.%d.%d.%d put filename at the host PC\n",0
-000268  20746674
-00026c  70202d69
-000270  2025642e
-000274  25642e25
-000278  642e2564
-00027c  20707574
-000280  2066696c
-000284  656e616d
-000288  65206174
-00028c  20746865
-000290  20686f73
-000294  74205043
-000298  0a00    
-00029a  00                DCB      0
-00029b  00                DCB      0
-                  |L1.668|
-00029c  75647020          DCB      "udp send pad: %s\n",0
-0002a0  73656e64
-0002a4  20706164
-0002a8  3a202573
-0002ac  0a00    
-0002ae  00                DCB      0
-0002af  00                DCB      0
-                  |L1.688|
-0002b0  75647020          DCB      "udp send buf: %s\n",0
-0002b4  73656e64
-0002b8  20627566
-0002bc  3a202573
-0002c0  0a00    
-0002c2  00                DCB      0
-0002c3  00                DCB      0
-                  |L1.708|
-0002c4  75647020          DCB      "udp send truesize: %d\n",0
-0002c8  73656e64
-0002cc  20747275
-0002d0  6573697a
-0002d4  653a2025
-0002d8  640a00  
-0002db  00                DCB      0
-                  |L1.732|
-0002dc  75647020          DCB      "udp send data: %s\n",0
-0002e0  73656e64
-0002e4  20646174
-0002e8  613a2025
-0002ec  730a00  
-0002ef  00                DCB      0
-                  |L1.752|
-0002f0  75647020          DCB      "udp send len: %d\n\n",0
-0002f4  73656e64
-0002f8  206c656e
-0002fc  3a202564
-000300  0a0a00  
-000303  00                DCB      0
-                  |L1.772|
-                          DCD      0x00000dd2
-                  |L1.776|
-                          DCD      0xc0a80242
-                  |L1.780|
-00030c  0a204469          DCB      "\n Display current Date and time: \n",0
-000310  73706c61
-000314  79206375
-000318  7272656e
-00031c  74204461
-000320  74652061
-000324  6e642074
-000328  696d653a
-00032c  200a00  
-00032f  00                DCB      0
-                  |L1.816|
-000330  20507265          DCB      " Press any key to exit.\n",0
-000334  73732061
-000338  6e79206b
-00033c  65792074
-000340  6f206578
-000344  69742e0a
-000348  00      
-000349  00                DCB      0
-00034a  00                DCB      0
-00034b  00                DCB      0
+000210  e59f1258          LDR      r1,|L1.1136|
+000214  e5810000          STR      r0,[r1,#0]  ; g_nYear
+;;;100    
+;;;101                g_nMonth   = rBCDMON;
+000218  e3a00457          MOV      r0,#0x57000000
+00021c  e5d00084          LDRB     r0,[r0,#0x84]
+000220  e59f124c          LDR      r1,|L1.1140|
+000224  e5810000          STR      r0,[r1,#0]  ; g_nMonth
+;;;102                g_nWeekday = rBCDDAY;
+000228  e3a00457          MOV      r0,#0x57000000
+00022c  e5d00080          LDRB     r0,[r0,#0x80]
+000230  e59f1240          LDR      r1,|L1.1144|
+000234  e5810000          STR      r0,[r1,#0]  ; g_nWeekday
+;;;103                g_nDate    = rBCDDATE;
+000238  e3a00457          MOV      r0,#0x57000000
+00023c  e5d0007c          LDRB     r0,[r0,#0x7c]
+000240  e59f1234          LDR      r1,|L1.1148|
+000244  e5810000          STR      r0,[r1,#0]  ; g_nDate
+;;;104                g_nHour    = rBCDHOUR;
+000248  e3a00457          MOV      r0,#0x57000000
+00024c  e5d00078          LDRB     r0,[r0,#0x78]
+000250  e59f1228          LDR      r1,|L1.1152|
+000254  e5810000          STR      r0,[r1,#0]  ; g_nHour
+;;;105                g_nMin     = rBCDMIN;
+000258  e3a00457          MOV      r0,#0x57000000
+00025c  e5d00074          LDRB     r0,[r0,#0x74]
+000260  e59f121c          LDR      r1,|L1.1156|
+000264  e5810000          STR      r0,[r1,#0]  ; g_nMin
+;;;106                g_nSec     = rBCDSEC;
+000268  e3a00457          MOV      r0,#0x57000000
+00026c  e5d00070          LDRB     r0,[r0,#0x70]
+000270  e59f1210          LDR      r1,|L1.1160|
+000274  e5810000          STR      r0,[r1,#0]  ; g_nSec
+;;;107           
+;;;108            uart_printf(" %02x:%02x:%02x  %10s,  %02x/%02x/%04x\r",g_nHour,g_nMin,g_nSec,day[g_nWeekday],g_nMonth,g_nDate,g_nYear);
+000278  e59f01f0          LDR      r0,|L1.1136|
+00027c  e5901000          LDR      r1,[r0,#0]  ; g_nYear
+000280  e59f01f4          LDR      r0,|L1.1148|
+000284  e5902000          LDR      r2,[r0,#0]  ; g_nDate
+000288  e59f01e4          LDR      r0,|L1.1140|
+00028c  e5903000          LDR      r3,[r0,#0]  ; g_nMonth
+000290  e59f01f4          LDR      r0,|L1.1164|
+000294  e59fc1dc          LDR      r12,|L1.1144|
+000298  e59cc000          LDR      r12,[r12,#0]  ; g_nWeekday
+00029c  e790010c          LDR      r0,[r0,r12,LSL #2]
+0002a0  e88d0009          STM      sp,{r0,r3}
+0002a4  e59f01dc          LDR      r0,|L1.1160|
+0002a8  e58d100c          STR      r1,[sp,#0xc]
+0002ac  e58d2008          STR      r2,[sp,#8]
+0002b0  e5903000          LDR      r3,[r0,#0]  ; g_nSec
+0002b4  e59f01c8          LDR      r0,|L1.1156|
+0002b8  e5902000          LDR      r2,[r0,#0]  ; g_nMin
+0002bc  e59f01bc          LDR      r0,|L1.1152|
+0002c0  e5901000          LDR      r1,[r0,#0]  ; g_nHour
+0002c4  e28f0f71          ADR      r0,|L1.1168|
+0002c8  ebfffffe          BL       uart_printf
+;;;109    
+;;;110    	rRTCCON = 0x0;					// No reset, Merge BCD counters, 1/32768, RTC Control disable(for power consumption)
+0002cc  e3a00000          MOV      r0,#0
+0002d0  e3a01457          MOV      r1,#0x57000000
+0002d4  e5c10040          STRB     r0,[r1,#0x40]
+;;;111        
+;;;112        uart_printf("\n\n Exit display.\n");
+0002d8  e28f0f76          ADR      r0,|L1.1208|
+0002dc  ebfffffe          BL       uart_printf
+;;;113    	 
+;;;114    		net_handle();
+0002e0  ebfffffe          BL       net_handle
+;;;115    		time_skb_reserve(skb);
+0002e4  e1a00005          MOV      r0,r5
+0002e8  ebfffffe          BL       time_skb_reserve
+;;;116    		time_send(skb, g_nYear,g_nMonth,g_nDate,g_nWeekday,g_nHour,g_nMin,g_nSec);	//192.168.2.66:3538
+0002ec  e59f0194          LDR      r0,|L1.1160|
+0002f0  e5902000          LDR      r2,[r0,#0]  ; g_nSec
+0002f4  e59f0188          LDR      r0,|L1.1156|
+0002f8  e5900000          LDR      r0,[r0,#0]  ; g_nMin
+0002fc  e59f117c          LDR      r1,|L1.1152|
+000300  e5911000          LDR      r1,[r1,#0]  ; g_nHour
+000304  e59f316c          LDR      r3,|L1.1144|
+000308  e5933000          LDR      r3,[r3,#0]  ; g_nWeekday
+00030c  e58d0008          STR      r0,[sp,#8]
+000310  e58d200c          STR      r2,[sp,#0xc]
+000314  e59f0160          LDR      r0,|L1.1148|
+000318  e58d1004          STR      r1,[sp,#4]
+00031c  e58d3000          STR      r3,[sp,#0]
+000320  e5903000          LDR      r3,[r0,#0]  ; g_nDate
+000324  e59f0148          LDR      r0,|L1.1140|
+000328  e5902000          LDR      r2,[r0,#0]  ; g_nMonth
+00032c  e59f013c          LDR      r0,|L1.1136|
+000330  e5901000          LDR      r1,[r0,#0]  ; g_nYear
+000334  e1a00005          MOV      r0,r5
+000338  ebfffffe          BL       time_send
+;;;117    	
+;;;118    /*	TftpLoadEnd  = 0;
+;;;119    	TftpPutMark  = 0;
+;;;120    	TftpPutBegin = 0;
+;;;121    	
+;;;122    	download_addr = 0x30008000;
+;;;123    	download_len = 0;
+;;;124    	
+;;;125    	while (!TftpLoadEnd) {		
+;;;126    		net_handle();
+;;;127    		if(TftpPutBegin) {
+;;;128    			uart_printf("Starting the TFTP download...\n");
+;;;129    			TftpPutBegin = 0;
+;;;130    		}
+;;;131    		if(TftpPutMark) {
+;;;132    			uart_sendbyte('.');
+;;;133    			TftpPutMark = 0;
+;;;134    		}
+;;;135    	}
+;;;136    
+;;;137    	if(TftpLoadEnd) {
+;;;138    		uart_printf("\ndownload 0x%x bytes to 0x%08x\n\n", download_len, download_addr);
+;;;139    	p=(char *)download_addr;
+;;;140    	for(i=0;i<download_len;i++)
+;;;141    		uart_printf("%c",p[i]);
+;;;142        uart_printf("\nPress any key to continue...\n");
+;;;143        while(!uart_getkey());
+;;;144    	return download_len;
+;;;145    	}*/
+;;;146    
+;;;147    	return 0;
+00033c  e3a00000          MOV      r0,#0
+000340  e28dd028          ADD      sp,sp,#0x28
+000344  e8bd41f0          POP      {r4-r8,lr}
+;;;148    }
+000348  e12fff1e          BX       lr
                   |L1.844|
-                          DCD      0x00001999
+                          DCD      0x000005ea
                   |L1.848|
-                          DCD      g_nYear
+                          DCD      0xc0a8026f
                   |L1.852|
-;;;99                 else 
-;;;100                    g_nYear = 0x2000 + rBCDYEAR;
-000354  e3a00457          MOV      r0,#0x57000000
-000358  e5d00088          LDRB     r0,[r0,#0x88]
-00035c  e2800a02          ADD      r0,r0,#0x2000
-000360  e51f1018          LDR      r1,|L1.848|
-000364  e5810000          STR      r0,[r1,#0]  ; g_nYear
-                  |L1.872|
-;;;101    
-;;;102                g_nMonth   = rBCDMON;
-000368  e3a00457          MOV      r0,#0x57000000
-00036c  e5d00084          LDRB     r0,[r0,#0x84]
-000370  e59f1178          LDR      r1,|L1.1264|
-000374  e5810000          STR      r0,[r1,#0]  ; g_nMonth
-;;;103                g_nWeekday = rBCDDAY;
-000378  e3a00457          MOV      r0,#0x57000000
-00037c  e5d00080          LDRB     r0,[r0,#0x80]
-000380  e59f116c          LDR      r1,|L1.1268|
-000384  e5810000          STR      r0,[r1,#0]  ; g_nWeekday
-;;;104                g_nDate    = rBCDDATE;
-000388  e3a00457          MOV      r0,#0x57000000
-00038c  e5d0007c          LDRB     r0,[r0,#0x7c]
-000390  e59f1160          LDR      r1,|L1.1272|
-000394  e5810000          STR      r0,[r1,#0]  ; g_nDate
-;;;105                g_nHour    = rBCDHOUR;
-000398  e3a00457          MOV      r0,#0x57000000
-00039c  e5d00078          LDRB     r0,[r0,#0x78]
-0003a0  e59f1154          LDR      r1,|L1.1276|
-0003a4  e5810000          STR      r0,[r1,#0]  ; g_nHour
-;;;106                g_nMin     = rBCDMIN;
-0003a8  e3a00457          MOV      r0,#0x57000000
-0003ac  e5d00074          LDRB     r0,[r0,#0x74]
-0003b0  e59f1148          LDR      r1,|L1.1280|
-0003b4  e5810000          STR      r0,[r1,#0]  ; g_nMin
-;;;107                g_nSec     = rBCDSEC;
-0003b8  e3a00457          MOV      r0,#0x57000000
-0003bc  e5d00070          LDRB     r0,[r0,#0x70]
-0003c0  e59f113c          LDR      r1,|L1.1284|
-0003c4  e5810000          STR      r0,[r1,#0]  ; g_nSec
-;;;108           
-;;;109            uart_printf(" %02x:%02x:%02x  %10s,  %02x/%02x/%04x\r",g_nHour,g_nMin,g_nSec,day[g_nWeekday],g_nMonth,g_nDate,g_nYear);
-0003c8  e51f0080          LDR      r0,|L1.848|
-0003cc  e5901000          LDR      r1,[r0,#0]  ; g_nYear
-0003d0  e59f0120          LDR      r0,|L1.1272|
-0003d4  e5902000          LDR      r2,[r0,#0]  ; g_nDate
-0003d8  e59f0110          LDR      r0,|L1.1264|
-0003dc  e5903000          LDR      r3,[r0,#0]  ; g_nMonth
-0003e0  e59f0120          LDR      r0,|L1.1288|
-0003e4  e59fc108          LDR      r12,|L1.1268|
-0003e8  e59cc000          LDR      r12,[r12,#0]  ; g_nWeekday
-0003ec  e790010c          LDR      r0,[r0,r12,LSL #2]
-0003f0  e88d0009          STM      sp,{r0,r3}
-0003f4  e59f0108          LDR      r0,|L1.1284|
-0003f8  e58d100c          STR      r1,[sp,#0xc]
-0003fc  e58d2008          STR      r2,[sp,#8]
-000400  e5903000          LDR      r3,[r0,#0]  ; g_nSec
-000404  e59f00f4          LDR      r0,|L1.1280|
-000408  e5902000          LDR      r2,[r0,#0]  ; g_nMin
-00040c  e59f00e8          LDR      r0,|L1.1276|
-000410  e5901000          LDR      r1,[r0,#0]  ; g_nHour
-000414  e28f00f0          ADR      r0,|L1.1292|
-000418  ebfffffe          BL       uart_printf
-;;;110    
-;;;111    	rRTCCON = 0x0;					// No reset, Merge BCD counters, 1/32768, RTC Control disable(for power consumption)
-00041c  e3a00000          MOV      r0,#0
-000420  e3a01457          MOV      r1,#0x57000000
-000424  e5c10040          STRB     r0,[r1,#0x40]
-;;;112        
-;;;113        uart_printf("\n\n Exit display.\n");
-000428  e28f0f41          ADR      r0,|L1.1332|
-00042c  ebfffffe          BL       uart_printf
-;;;114    	 
-;;;115    		net_handle();
-000430  ebfffffe          BL       net_handle
-;;;116    		udp_skb_reserve(skb);
-000434  e1a00004          MOV      r0,r4
-000438  ebfffffe          BL       udp_skb_reserve
-;;;117    						
-;;;118    		skb->data[0] = g_nHour;
-00043c  e59f00b8          LDR      r0,|L1.1276|
-000440  e5d00000          LDRB     r0,[r0,#0]  ; g_nHour
-000444  e59415f0          LDR      r1,[r4,#0x5f0]
-000448  e5c10000          STRB     r0,[r1,#0]
-;;;119    		skb->data[1] = g_nMin;
-00044c  e59f00ac          LDR      r0,|L1.1280|
-000450  e5d00000          LDRB     r0,[r0,#0]  ; g_nMin
-000454  e59415f0          LDR      r1,[r4,#0x5f0]
-000458  e5c10001          STRB     r0,[r1,#1]
-;;;120    		skb->data[2] = g_nSec;
-00045c  e59f00a0          LDR      r0,|L1.1284|
-000460  e5d00000          LDRB     r0,[r0,#0]  ; g_nSec
-000464  e59415f0          LDR      r1,[r4,#0x5f0]
-000468  e5c10002          STRB     r0,[r1,#2]
-;;;121    		skb->data[3] = g_nWeekday;
-00046c  e59f0080          LDR      r0,|L1.1268|
-000470  e5d00000          LDRB     r0,[r0,#0]  ; g_nWeekday
-000474  e59415f0          LDR      r1,[r4,#0x5f0]
-000478  e5c10003          STRB     r0,[r1,#3]
-;;;122    		skb->data[4] = 2;		
-00047c  e3a00002          MOV      r0,#2
-000480  e59415f0          LDR      r1,[r4,#0x5f0]
-000484  e5c10004          STRB     r0,[r1,#4]
-;;;123    		skb->data[5] = 2;
-000488  e59415f0          LDR      r1,[r4,#0x5f0]
-00048c  e5c10005          STRB     r0,[r1,#5]
-;;;124    		
-;;;125    		uart_printf("udp send pad: %s\n",skb->pad);
-000490  e1a01004          MOV      r1,r4
-000494  e24f0c02          ADR      r0,|L1.668|
-000498  ebfffffe          BL       uart_printf
-;;;126    		uart_printf("udp send buf: %s\n",skb->buf);
-00049c  e2841002          ADD      r1,r4,#2
-0004a0  e24f0f7e          ADR      r0,|L1.688|
-0004a4  ebfffffe          BL       uart_printf
-;;;127    		uart_printf("udp send truesize: %d\n",skb->truesize);
-0004a8  e24f0f7b          ADR      r0,|L1.708|
-0004ac  e59415ec          LDR      r1,[r4,#0x5ec]
-0004b0  ebfffffe          BL       uart_printf
-;;;128    		uart_printf("udp send data: %s\n",skb->data);
-0004b4  e24f0e1e          ADR      r0,|L1.732|
-0004b8  e59415f0          LDR      r1,[r4,#0x5f0]
-0004bc  ebfffffe          BL       uart_printf
-;;;129    		uart_printf("udp send len: %d\n\n",skb->len);
-0004c0  e24f0f76          ADR      r0,|L1.752|
-0004c4  e59415f4          LDR      r1,[r4,#0x5f4]
-0004c8  ebfffffe          BL       uart_printf
-;;;130    		udp_send(skb, 3232236098, UDP, 3538);	//192.168.2.66:3538
-0004cc  e51f31d0          LDR      r3,|L1.772|
-0004d0  e3a02011          MOV      r2,#0x11
-0004d4  e51f11d4          LDR      r1,|L1.776|
-0004d8  e1a00004          MOV      r0,r4
-0004dc  ebfffffe          BL       udp_send
-;;;131    
-;;;132    	
-;;;133    /*	TftpLoadEnd  = 0;
-;;;134    	TftpPutMark  = 0;
-;;;135    	TftpPutBegin = 0;
-;;;136    	
-;;;137    	download_addr = 0x30008000;
-;;;138    	download_len = 0;
-;;;139    	
-;;;140    	while (!TftpLoadEnd) {		
-;;;141    		net_handle();
-;;;142    		if(TftpPutBegin) {
-;;;143    			uart_printf("Starting the TFTP download...\n");
-;;;144    			TftpPutBegin = 0;
-;;;145    		}
-;;;146    		if(TftpPutMark) {
-;;;147    			uart_sendbyte('.');
-;;;148    			TftpPutMark = 0;
-;;;149    		}
-;;;150    	}
-;;;151    
-;;;152    	if(TftpLoadEnd) {
-;;;153    		uart_printf("\ndownload 0x%x bytes to 0x%08x\n\n", download_len, download_addr);
-;;;154    	p=(char *)download_addr;
-;;;155    	for(i=0;i<download_len;i++)
-;;;156    		uart_printf("%c",p[i]);
-;;;157        uart_printf("\nPress any key to continue...\n");
-;;;158        while(!uart_getkey());
-;;;159    	return download_len;
-;;;160    	}*/
-;;;161    
-;;;162    	return 0;
-0004e0  e3a00000          MOV      r0,#0
-0004e4  e28dd028          ADD      sp,sp,#0x28
-0004e8  e8bd41f0          POP      {r4-r8,lr}
-;;;163    }
-0004ec  e12fff1e          BX       lr
-;;;164    
+000354  4d696e69          DCB      "Mini TFTP Server 1.0 (IP : %d.%d.%d.%d PORT: %d)\n",0
+000358  20544654
+00035c  50205365
+000360  72766572
+000364  20312e30
+000368  20284950
+00036c  203a2025
+000370  642e2564
+000374  2e25642e
+000378  25642050
+00037c  4f52543a
+000380  20256429
+000384  0a00    
+000386  00                DCB      0
+000387  00                DCB      0
+                  |L1.904|
+000388  54797065          DCB      "Type tftp -i %d.%d.%d.%d put filename at the host PC\n",0
+00038c  20746674
+000390  70202d69
+000394  2025642e
+000398  25642e25
+00039c  642e2564
+0003a0  20707574
+0003a4  2066696c
+0003a8  656e616d
+0003ac  65206174
+0003b0  20746865
+0003b4  20686f73
+0003b8  74205043
+0003bc  0a00    
+0003be  00                DCB      0
+0003bf  00                DCB      0
+                  |L1.960|
+0003c0  75647020          DCB      "udp send pad: %s\n",0
+0003c4  73656e64
+0003c8  20706164
+0003cc  3a202573
+0003d0  0a00    
+0003d2  00                DCB      0
+0003d3  00                DCB      0
+                  |L1.980|
+0003d4  75647020          DCB      "udp send buf: %s\n",0
+0003d8  73656e64
+0003dc  20627566
+0003e0  3a202573
+0003e4  0a00    
+0003e6  00                DCB      0
+0003e7  00                DCB      0
+                  |L1.1000|
+0003e8  75647020          DCB      "udp send truesize: %d\n",0
+0003ec  73656e64
+0003f0  20747275
+0003f4  6573697a
+0003f8  653a2025
+0003fc  640a00  
+0003ff  00                DCB      0
+                  |L1.1024|
+000400  75647020          DCB      "udp send data: %s\n",0
+000404  73656e64
+000408  20646174
+00040c  613a2025
+000410  730a00  
+000413  00                DCB      0
+                  |L1.1044|
+000414  75647020          DCB      "udp send len: %d\n\n",0
+000418  73656e64
+00041c  206c656e
+000420  3a202564
+000424  0a0a00  
+000427  00                DCB      0
+                  |L1.1064|
+                          DCD      0x00000dd2
+                  |L1.1068|
+                          DCD      0xc0a80242
+                  |L1.1072|
+000430  0a204469          DCB      "\n Display current Date and time: \n",0
+000434  73706c61
+000438  79206375
+00043c  7272656e
+000440  74204461
+000444  74652061
+000448  6e642074
+00044c  696d653a
+000450  200a00  
+000453  00                DCB      0
+                  |L1.1108|
+000454  20507265          DCB      " Press any key to exit.\n",0
+000458  73732061
+00045c  6e79206b
+000460  65792074
+000464  6f206578
+000468  69742e0a
+00046c  00      
+00046d  00                DCB      0
+00046e  00                DCB      0
+00046f  00                DCB      0
+                  |L1.1136|
+                          DCD      g_nYear
+                  |L1.1140|
+                          DCD      g_nMonth
+                  |L1.1144|
+                          DCD      g_nWeekday
+                  |L1.1148|
+                          DCD      g_nDate
+                  |L1.1152|
+                          DCD      g_nHour
+                  |L1.1156|
+                          DCD      g_nMin
+                  |L1.1160|
+                          DCD      g_nSec
+                  |L1.1164|
+                          DCD      ||day||
+                  |L1.1168|
+000490  20253032          DCB      " %02x:%02x:%02x  %10s,  %02x/%02x/%04x\r",0
+000494  783a2530
+000498  32783a25
+00049c  30327820
+0004a0  20253130
+0004a4  732c2020
+0004a8  25303278
+0004ac  2f253032
+0004b0  782f2530
+0004b4  34780d00
+                  |L1.1208|
+0004b8  0a0a2045          DCB      "\n\n Exit display.\n",0
+0004bc  78697420
+0004c0  64697370
+0004c4  6c61792e
+0004c8  0a00    
+0004ca  00                DCB      0
+0004cb  00                DCB      0
                           ENDP
 
-                  |L1.1264|
-                          DCD      g_nMonth
-                  |L1.1268|
-                          DCD      g_nWeekday
-                  |L1.1272|
-                          DCD      g_nDate
-                  |L1.1276|
-                          DCD      g_nHour
-                  |L1.1280|
-                          DCD      g_nMin
-                  |L1.1284|
-                          DCD      g_nSec
-                  |L1.1288|
-                          DCD      ||day||
-                  |L1.1292|
-00050c  20253032          DCB      " %02x:%02x:%02x  %10s,  %02x/%02x/%04x\r",0
-000510  783a2530
-000514  32783a25
-000518  30327820
-00051c  20253130
-000520  732c2020
-000524  25303278
-000528  2f253032
-00052c  782f2530
-000530  34780d00
-                  |L1.1332|
-000534  0a0a2045          DCB      "\n\n Exit display.\n",0
-000538  78697420
-00053c  64697370
-000540  6c61792e
-000544  0a00    
-000546  00                DCB      0
-000547  00                DCB      0
 
                           AREA ||.conststring||, DATA, READONLY, MERGE=1, STRINGS, ALIGN=0
 

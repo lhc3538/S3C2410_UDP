@@ -498,6 +498,9 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>New Group</GroupName>
+        </Group>
       </Groups>
     </Target>
     <Target>
@@ -991,6 +994,9 @@
               <FilePath>.\readme.txt</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>New Group</GroupName>
         </Group>
       </Groups>
     </Target>

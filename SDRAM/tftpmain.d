@@ -5,6 +5,7 @@
 .\SDRAM\tftpmain.o: .\INC\tftp\arp.h
 .\SDRAM\tftpmain.o: .\INC\tftp\ip.h
 .\SDRAM\tftpmain.o: .\INC\tftp\udp.h
+.\SDRAM\tftpmain.o: .\INC\tftp\time.h
 .\SDRAM\tftpmain.o: .\INC\utils.h
 .\SDRAM\tftpmain.o: ..\Common\Inc\2410lib.h
 .\SDRAM\tftpmain.o: ..\Common\Inc\def.h

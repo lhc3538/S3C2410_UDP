@@ -3,6 +3,7 @@
 #include "eth.h"
 #include "ip.h"
 #include "udp.h"
+#include "time.h"
 #include "tftp.h"
 #include "utils.h"
 
@@ -36,9 +37,10 @@ int udp_send(struct sk_buff *skb, unsigned long ip,
 	udp_hdr = (struct udphdr *)skb_push(skb, sizeof(struct udphdr));
 	udp_hdr->source = htons(source);
 	udp_hdr->dest = htons(dest);
-	udp_hdr->len = htons(12);
+	udp_hdr->len = htons(12+sizeof(struct timehdr));
 	udp_hdr->check = 0;
 
+	uart_printf("udplen: %d\n",skb->len);
 	ip_send(skb, ip, UDP);
 
 	return 0;

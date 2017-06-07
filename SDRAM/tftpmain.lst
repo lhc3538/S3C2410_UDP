@@ -295,6 +295,26 @@ Nunsigned short udp_get_source_port(struct sk_buff *skb);
 N
 N#endif /* __UDP_H */
 L 7 "Source\tftp\tftpmain.c" 2
+N#include "time.h"
+L 1 ".\INC\tftp\time.h" 1
+N#ifndef __TIME_H
+N#define __TIME_H
+N
+N/*
+N *	This structure defines an time header.
+N */
+N
+N__packed struct timehdr {
+N	char time_data[8];
+N};//__attribute__ ((packed));
+N
+Nint time_init(void);
+Nint time_send(struct sk_buff *skb, int g_nYear,int g_nMonth,
+N	int g_nDate,int g_nWeekday,int g_nHour,int g_nMin,int g_nSec);
+Nvoid time_skb_reserve(struct sk_buff *skb);
+N
+N#endif /* __TIME_H */
+L 8 "Source\tftp\tftpmain.c" 2
 N#include "utils.h"
 L 1 ".\INC\utils.h" 1
 N#ifndef	__UTILS_H
@@ -320,7 +340,7 @@ N
 Nint GetParameter(char *str, int cnt);
 N
 N#endif
-L 8 "Source\tftp\tftpmain.c" 2
+L 9 "Source\tftp\tftpmain.c" 2
 N#include "2410lib.h"
 L 1 "..\Common\Inc\2410lib.h" 1
 N/*********************************************************************************************
@@ -1372,7 +1392,7 @@ N#endif
 N
 N#endif  //__2410lib_h__
 N
-L 9 "Source\tftp\tftpmain.c" 2
+L 10 "Source\tftp\tftpmain.c" 2
 N
 NINT32T g_nYear,g_nMonth,g_nDate,g_nWeekday,g_nHour,g_nMin,g_nSec;
 Xint g_nYear,g_nMonth,g_nDate,g_nWeekday,g_nHour,g_nMin,g_nSec;
@@ -1436,7 +1456,7 @@ N	unsigned char eth_addr[ETH_ALEN];
 X	unsigned char eth_addr[6];	
 N	unsigned char *s;
 N	int i;
-N	char *p;
+N	unsigned char *p;
 N	give_ip = LOCAL_IP_ADDR;
 X	give_ip = ((192UL<<24)|(168<<16)|(2<<8)|111);
 N	s = (unsigned char *)&give_ip;
@@ -1456,6 +1476,7 @@ N
 N	
 N
 N		net_handle();
+N		//change data p
 N		udp_skb_reserve(skb);
 N		(*skb->data) = 'l';
 N		
@@ -1464,7 +1485,7 @@ N		uart_printf("udp send buf: %s\n",skb->buf);
 N		uart_printf("udp send truesize: %d\n",skb->truesize);
 N		uart_printf("udp send data: %s\n",skb->data);
 N		uart_printf("udp send len: %d\n\n",skb->len);
-W "Source\tftp\tftpmain.c" 89 17 literal treated as "long long"
+W "Source\tftp\tftpmain.c" 91 17 literal treated as "long long"
 N		udp_send(skb, 3232236098, UDP, 3538);	//192.168.2.66:3538
 X		udp_send(skb, 3232236098, 0x11, 3538);	
 N		
@@ -1475,12 +1496,8 @@ N	rRTCCON = 0x01;					// No reset, Merge BCD counters, 1/32768, RTC Control enab
 X	(*(volatile unsigned char *)0x57000040) = 0x01;					
 N	uart_printf(" Press any key to exit.\n");
 N
-N            if(rBCDYEAR == 0x99) 
-X            if((*(volatile unsigned char *)0x57000088) == 0x99) 
-N                g_nYear = 0x1999;
-N            else 
-N                g_nYear = 0x2000 + rBCDYEAR;
-X                g_nYear = 0x2000 + (*(volatile unsigned char *)0x57000088);
+N            g_nYear =rBCDYEAR;
+X            g_nYear =(*(volatile unsigned char *)0x57000088);
 N
 N            g_nMonth   = rBCDMON;
 X            g_nMonth   = (*(volatile unsigned char *)0x57000084);
@@ -1503,24 +1520,8 @@ N
 N    uart_printf("\n\n Exit display.\n");
 N	 
 N		net_handle();
-N		udp_skb_reserve(skb);
-N						
-N		skb->data[0] = g_nHour;
-N		skb->data[1] = g_nMin;
-N		skb->data[2] = g_nSec;
-N		skb->data[3] = g_nWeekday;
-N		skb->data[4] = 2;		
-N		skb->data[5] = 2;
-N		
-N		uart_printf("udp send pad: %s\n",skb->pad);
-N		uart_printf("udp send buf: %s\n",skb->buf);
-N		uart_printf("udp send truesize: %d\n",skb->truesize);
-N		uart_printf("udp send data: %s\n",skb->data);
-N		uart_printf("udp send len: %d\n\n",skb->len);
-W "Source\tftp\tftpmain.c" 130 17 literal treated as "long long"
-N		udp_send(skb, 3232236098, UDP, 3538);	//192.168.2.66:3538
-X		udp_send(skb, 3232236098, 0x11, 3538);	
-N
+N		time_skb_reserve(skb);
+N		time_send(skb, g_nYear,g_nMonth,g_nDate,g_nWeekday,g_nHour,g_nMin,g_nSec);	//192.168.2.66:3538
 N	
 N/*	TftpLoadEnd  = 0;
 N	TftpPutMark  = 0;
@@ -1552,8 +1553,8 @@ N	return download_len;
 N	}*/
 N
 N	return 0;
-W "Source\tftp\tftpmain.c" 62 6 variable "i" was declared but never referenced
-W "Source\tftp\tftpmain.c" 63 8 variable "p" was declared but never referenced
+W "Source\tftp\tftpmain.c" 63 6 variable "i" was declared but never referenced
+W "Source\tftp\tftpmain.c" 64 17 variable "p" was declared but never referenced
 N}
 N
 N

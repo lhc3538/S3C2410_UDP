@@ -4,6 +4,7 @@
 #include "arp.h"
 #include "ip.h"
 #include "udp.h"
+#include "time.h"
 #include "utils.h"
 #include "2410lib.h"
 
@@ -60,7 +61,7 @@ int NetLoadFile(UINT32T addr, UINT32T give_ip, UINT32T a3, UINT32T a4)
 	unsigned char eth_addr[ETH_ALEN];	
 	unsigned char *s;
 	int i;
-	char *p;
+	unsigned char *p;
 	give_ip = LOCAL_IP_ADDR;
 	s = (unsigned char *)&give_ip;
 	
@@ -78,6 +79,7 @@ int NetLoadFile(UINT32T addr, UINT32T give_ip, UINT32T a3, UINT32T a4)
 	
 
 		net_handle();
+		//change data p
 		udp_skb_reserve(skb);
 		(*skb->data) = 'l';
 		
@@ -94,10 +96,7 @@ int NetLoadFile(UINT32T addr, UINT32T give_ip, UINT32T a3, UINT32T a4)
 	rRTCCON = 0x01;					// No reset, Merge BCD counters, 1/32768, RTC Control enable
 	uart_printf(" Press any key to exit.\n");
 
-            if(rBCDYEAR == 0x99) 
-                g_nYear = 0x1999;
-            else 
-                g_nYear = 0x2000 + rBCDYEAR;
+            g_nYear =rBCDYEAR;
 
             g_nMonth   = rBCDMON;
             g_nWeekday = rBCDDAY;
@@ -113,22 +112,8 @@ int NetLoadFile(UINT32T addr, UINT32T give_ip, UINT32T a3, UINT32T a4)
     uart_printf("\n\n Exit display.\n");
 	 
 		net_handle();
-		udp_skb_reserve(skb);
-						
-		skb->data[0] = g_nHour;
-		skb->data[1] = g_nMin;
-		skb->data[2] = g_nSec;
-		skb->data[3] = g_nWeekday;
-		skb->data[4] = 2;		
-		skb->data[5] = 2;
-		
-		uart_printf("udp send pad: %s\n",skb->pad);
-		uart_printf("udp send buf: %s\n",skb->buf);
-		uart_printf("udp send truesize: %d\n",skb->truesize);
-		uart_printf("udp send data: %s\n",skb->data);
-		uart_printf("udp send len: %d\n\n",skb->len);
-		udp_send(skb, 3232236098, UDP, 3538);	//192.168.2.66:3538
-
+		time_skb_reserve(skb);
+		time_send(skb, g_nYear,g_nMonth,g_nDate,g_nWeekday,g_nHour,g_nMin,g_nSec);	//192.168.2.66:3538
 	
 /*	TftpLoadEnd  = 0;
 	TftpPutMark  = 0;

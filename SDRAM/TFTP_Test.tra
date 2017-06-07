@@ -13,10 +13,11 @@
 ### List of Objects: adding '".\sdram\tftpmain.o"'
 ### List of Objects: adding '".\sdram\tftpput.o"'
 ### List of Objects: adding '".\sdram\udp.o"'
+### List of Objects: adding '".\sdram\time.o"'
 ### List of Objects: adding '".\sdram\2410lib.o"'
 ### List of Objects: adding '".\sdram\sys_init.o"'
 ### ADS-LD Command completed:
---cpu ARM920T ".\sdram\s3c2410a.o" ".\sdram\main.o" ".\sdram\arp.o" ".\sdram\dm9000dbg.o" ".\sdram\eth.o" ".\sdram\icmp.o" ".\sdram\ip.o" ".\sdram\skbuff.o" ".\sdram\tftp.o" ".\sdram\tftpmain.o" ".\sdram\tftpput.o" ".\sdram\udp.o" ".\sdram\2410lib.o" ".\sdram\sys_init.o" 
+--cpu ARM920T ".\sdram\s3c2410a.o" ".\sdram\main.o" ".\sdram\arp.o" ".\sdram\dm9000dbg.o" ".\sdram\eth.o" ".\sdram\icmp.o" ".\sdram\ip.o" ".\sdram\skbuff.o" ".\sdram\tftp.o" ".\sdram\tftpmain.o" ".\sdram\tftpput.o" ".\sdram\udp.o" ".\sdram\time.o" ".\sdram\2410lib.o" ".\sdram\sys_init.o" 
 --strict --scatter ".\SDRAM\TFTP_Test.sct" 
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
 --info sizes --info totals --info unused --info veneers 
@@ -24,7 +25,7 @@
 ### ADS-LD Output File: '.\SDRAM\TFTP_Test.axf'
 ### ADS-LD Command File: '.\SDRAM\TFTP_Test.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile '.\SDRAM\TFTP_Test.lnp', Handle=0x000003AC
+### Creating CmdFile '.\SDRAM\TFTP_Test.lnp', Handle=0x00001050
 ### Writing '.lnp' file
 ### ADS-LD Command file '.\SDRAM\TFTP_Test.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.
