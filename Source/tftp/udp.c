@@ -40,7 +40,7 @@ int udp_send(struct sk_buff *skb, unsigned long ip,
 	udp_hdr->len = htons(12+sizeof(struct timehdr));
 	udp_hdr->check = 0;
 
-	uart_printf("udplen: %d\n",skb->len);
+	//uart_printf("udplen: %d\n",skb->len);
 	ip_send(skb, ip, UDP);
 
 	return 0;

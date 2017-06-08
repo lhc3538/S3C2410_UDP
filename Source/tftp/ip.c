@@ -92,7 +92,7 @@ int ip_send(struct sk_buff *skb, unsigned long ip, unsigned char proto)
 	ip_hdr->daddr = htonl(ip);	
 	ip_hdr->check = ip_fast_csum((unsigned char *)ip_hdr,ip_hdr->ihl);
 
-	uart_printf("ethlen: %d\n",skb->len);
+	//uart_printf("ethlen: %d\n",skb->len);
 	eth_send(skb, dest_eth_addr, ETH_P_IP);
 
 	return 0;

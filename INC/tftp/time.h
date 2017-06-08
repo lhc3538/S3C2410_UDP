@@ -6,7 +6,8 @@
  */
 
 __packed struct timehdr {
-	int time_data[8];
+	char time_data[6];
+	int year;
 };//__attribute__ ((packed));
 
 int time_init(void);

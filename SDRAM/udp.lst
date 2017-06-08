@@ -159,6 +159,27 @@ Nunsigned short udp_get_source_port(struct sk_buff *skb);
 N
 N#endif /* __UDP_H */
 L 6 "Source\tftp\udp.c" 2
+N#include "time.h"
+L 1 ".\INC\tftp\time.h" 1
+N#ifndef __TIME_H
+N#define __TIME_H
+N
+N/*
+N *	This structure defines an time header.
+N */
+N
+N__packed struct timehdr {
+N	char time_data[6];
+N	int year;
+N};//__attribute__ ((packed));
+N
+Nint time_init(void);
+Nint time_send(struct sk_buff *skb, int g_nYear,int g_nMonth,
+N	int g_nDate,int g_nWeekday,int g_nHour,int g_nMin,int g_nSec);
+Nvoid time_skb_reserve(struct sk_buff *skb);
+N
+N#endif /* __TIME_H */
+L 7 "Source\tftp\udp.c" 2
 N#include "tftp.h"
 L 1 ".\INC\tftp\tftp.h" 1
 N#ifndef __TFTP_H
@@ -209,7 +230,7 @@ N
 Nint tftp_rcv_packet(struct sk_buff *skb);
 N
 N#endif /* __TFTP_H */
-L 7 "Source\tftp\udp.c" 2
+L 8 "Source\tftp\udp.c" 2
 N#include "utils.h"
 L 1 ".\INC\utils.h" 1
 N#ifndef	__UTILS_H
@@ -235,7 +256,7 @@ N
 Nint GetParameter(char *str, int cnt);
 N
 N#endif
-L 8 "Source\tftp\udp.c" 2
+L 9 "Source\tftp\udp.c" 2
 N
 N
 N
@@ -268,11 +289,10 @@ N
 N	udp_hdr = (struct udphdr *)skb_push(skb, sizeof(struct udphdr));
 N	udp_hdr->source = htons(source);
 N	udp_hdr->dest = htons(dest);
-N	udp_hdr->len = htons(30);
+N	udp_hdr->len = htons(12+sizeof(struct timehdr));
 N	udp_hdr->check = 0;
 N
-W "Source\tftp\udp.c" 42 2 function "uart_printf" declared implicitly
-N	uart_printf("udplen: %d\n",skb->len);
+N	//uart_printf("udplen: %d\n",skb->len);
 N	ip_send(skb, ip, UDP);
 X	ip_send(skb, ip, 0x11);
 N

@@ -25,7 +25,7 @@
 ### ADS-LD Output File: '.\SDRAM\TFTP_Test.axf'
 ### ADS-LD Command File: '.\SDRAM\TFTP_Test.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile '.\SDRAM\TFTP_Test.lnp', Handle=0x00001050
+### Creating CmdFile '.\SDRAM\TFTP_Test.lnp', Handle=0x00000620
 ### Writing '.lnp' file
 ### ADS-LD Command file '.\SDRAM\TFTP_Test.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

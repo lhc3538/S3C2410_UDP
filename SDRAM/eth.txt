@@ -69,55 +69,46 @@
 00007c  e1a00420          LSR      r0,r0,#8
 000080  e5c5000d          STRB     r0,[r5,#0xd]
 ;;;24     	
-;;;25     	uart_printf("dm9000len: %d\n",skb->len);
-000084  e28f0054          ADR      r0,|L1.224|
-000088  e59415f4          LDR      r1,[r4,#0x5f4]
-00008c  ebfffffe          BL       uart_printf
+;;;25     	//uart_printf("dm9000len: %d\n",skb->len);
 ;;;26     	return dm9000_send(skb->data, skb->len);
-000090  e59405f0          LDR      r0,[r4,#0x5f0]
-000094  e59415f4          LDR      r1,[r4,#0x5f4]
-000098  ebfffffe          BL       dm9000_send
-00009c  e8bd41fc          POP      {r2-r8,lr}
+000084  e59405f0          LDR      r0,[r4,#0x5f0]
+000088  e59415f4          LDR      r1,[r4,#0x5f4]
+00008c  ebfffffe          BL       dm9000_send
+000090  e8bd41fc          POP      {r2-r8,lr}
 ;;;27     }
-0000a0  e12fff1e          BX       lr
+000094  e12fff1e          BX       lr
 ;;;28     
                           ENDP
 
                   eth_rcv PROC
 ;;;29     int eth_rcv(struct sk_buff *skb)
-0000a4  e92d4010          PUSH     {r4,lr}
+000098  e92d4010          PUSH     {r4,lr}
 ;;;30     {
-0000a8  e1a04000          MOV      r4,r0
+00009c  e1a04000          MOV      r4,r0
 ;;;31     	return DM9000DBG_GetFrame(skb->data, &skb->len);
-0000ac  e59405f0          LDR      r0,[r4,#0x5f0]
-0000b0  e2841b01          ADD      r1,r4,#0x400
-0000b4  e2811f7d          ADD      r1,r1,#0x1f4
-0000b8  ebfffffe          BL       DM9000DBG_GetFrame
-0000bc  e8bd4010          POP      {r4,lr}
+0000a0  e59405f0          LDR      r0,[r4,#0x5f0]
+0000a4  e2841b01          ADD      r1,r4,#0x400
+0000a8  e2811f7d          ADD      r1,r1,#0x1f4
+0000ac  ebfffffe          BL       DM9000DBG_GetFrame
+0000b0  e8bd4010          POP      {r4,lr}
 ;;;32     }
-0000c0  e12fff1e          BX       lr
+0000b4  e12fff1e          BX       lr
 ;;;33     
                           ENDP
 
                   eth_skb_reserve PROC
 ;;;38     
 ;;;39     void eth_skb_reserve(struct sk_buff *skb)
-0000c4  e92d4010          PUSH     {r4,lr}
+0000b8  e92d4010          PUSH     {r4,lr}
 ;;;40     {
-0000c8  e1a04000          MOV      r4,r0
+0000bc  e1a04000          MOV      r4,r0
 ;;;41     	skb_reserve(skb, ETH_HLEN);
-0000cc  e3a0100e          MOV      r1,#0xe
-0000d0  e1a00004          MOV      r0,r4
-0000d4  ebfffffe          BL       skb_reserve
+0000c0  e3a0100e          MOV      r1,#0xe
+0000c4  e1a00004          MOV      r0,r4
+0000c8  ebfffffe          BL       skb_reserve
 ;;;42     }
-0000d8  e8bd4010          POP      {r4,lr}
-0000dc  e12fff1e          BX       lr
+0000cc  e8bd4010          POP      {r4,lr}
+0000d0  e12fff1e          BX       lr
 ;;;43     
                           ENDP
 
-                  |L1.224|
-0000e0  646d3930          DCB      "dm9000len: %d\n",0
-0000e4  30306c65
-0000e8  6e3a2025
-0000ec  640a00  
-0000ef  00                DCB      0

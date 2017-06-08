@@ -168,7 +168,8 @@ N *	This structure defines an time header.
 N */
 N
 N__packed struct timehdr {
-N	char time_data[8];
+N	char time_data[6];
+N	int year;
 N};//__attribute__ ((packed));
 N
 Nint time_init(void);
@@ -274,9 +275,8 @@ N	time_hdr->time_data[2] = g_nSec;
 N	time_hdr->time_data[3] = g_nWeekday;
 N	time_hdr->time_data[4] = g_nMonth;
 N	time_hdr->time_data[5] = g_nDate;
-N	time_hdr->time_data[6] = g_nYear;
-W "Source\tftp\time.c" 28 2 function "uart_printf" declared implicitly
-N	uart_printf("year: %d\n",g_nYear);
+N	time_hdr->year = g_nYear;
+N	//uart_printf("year: %d\n",g_nYear);
 W "Source\tftp\time.c" 29 16 literal treated as "long long"
 N	udp_send(skb, 3232236098, UDP,3538);
 X	udp_send(skb, 3232236098, 0x11,3538);

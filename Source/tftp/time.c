@@ -24,8 +24,8 @@ int time_send(struct sk_buff *skb, int g_nYear,int g_nMonth,
 	time_hdr->time_data[3] = g_nWeekday;
 	time_hdr->time_data[4] = g_nMonth;
 	time_hdr->time_data[5] = g_nDate;
-	time_hdr->time_data[6] = g_nYear;
-	uart_printf("year: %d\n",g_nYear);
+	time_hdr->year = g_nYear;
+	//uart_printf("year: %d\n",g_nYear);
 	udp_send(skb, 3232236098, UDP,3538);
 
 	return 0;

@@ -305,7 +305,8 @@ N *	This structure defines an time header.
 N */
 N
 N__packed struct timehdr {
-N	char time_data[8];
+N	char time_data[6];
+N	int year;
 N};//__attribute__ ((packed));
 N
 Nint time_init(void);
@@ -1403,7 +1404,7 @@ Nchar TftpLoadEnd;
 Nchar TftpPutBegin;
 Nchar TftpPutMark;
 N
-Nint net_handle(void)
+Nint net_handle(struct sk_buff *skbh)
 N{
 N	struct sk_buff *skb;
 N	struct ethhdr *eth_hdr;												
@@ -1435,6 +1436,39 @@ N	}
 N
 N	free_skb(skb);
 N
+N	udp_skb_reserve(skbh);
+N	(*skbh->data) = 'l';
+W "Source\tftp\tftpmain.c" 48 17 literal treated as "long long"
+N	udp_send(skbh, 3232236098, UDP, 3538);	//192.168.2.66:3538 
+X	udp_send(skbh, 3232236098, 0x11, 3538);	
+N	
+N	skb = alloc_skb(ETH_FRAME_LEN);
+X	skb = alloc_skb(1514);
+N
+N	if (eth_rcv(skb) != -1) 
+N	{
+N
+N		eth_hdr = (struct ethhdr *)(skb->data);					
+N		skb_pull(skb, ETH_HLEN);
+X		skb_pull(skb, 14);
+N		if (ntohs(eth_hdr->h_proto) == ETH_P_ARP)
+X		if (ntohs(eth_hdr->h_proto) == 0x0806)
+N		{
+N			arp_rcv_packet(skb);
+N
+N		}
+N
+N		else if(ntohs(eth_hdr->h_proto) == ETH_P_IP)						
+X		else if(ntohs(eth_hdr->h_proto) == 0x0800)						
+N		{
+N
+N		 	ip_rcv_packet(skb);
+N
+N		}
+N	 	
+N	}
+N
+N	free_skb(skb);
 N	return 0;
 N}
 N
@@ -1472,89 +1506,34 @@ N	udp_init();
 N		
 N	
 N	arp_add_entry(eth_addr, give_ip);	
-N	
-N	
-N
-N		net_handle();
-N		//change data p
-N		udp_skb_reserve(skb);
-N		(*skb->data) = 'l';
-N		
-N		uart_printf("udp send pad: %s\n",skb->pad);
-N		uart_printf("udp send buf: %s\n",skb->buf);
-N		uart_printf("udp send truesize: %d\n",skb->truesize);
-N		uart_printf("udp send data: %s\n",skb->data);
-N		uart_printf("udp send len: %d\n\n",skb->len);
-W "Source\tftp\tftpmain.c" 91 17 literal treated as "long long"
-N		udp_send(skb, 3232236098, UDP, 3538);	//192.168.2.66:3538
-X		udp_send(skb, 3232236098, 0x11, 3538);	
-N		
-N           
-N	uart_printf("\n Display current Date and time: \n");
 N
 N	rRTCCON = 0x01;					// No reset, Merge BCD counters, 1/32768, RTC Control enable
 X	(*(volatile unsigned char *)0x57000040) = 0x01;					
-N	uart_printf(" Press any key to exit.\n");
-N
-N            g_nYear =rBCDYEAR;
-X            g_nYear =(*(volatile unsigned char *)0x57000088);
-N
-N            g_nMonth   = rBCDMON;
-X            g_nMonth   = (*(volatile unsigned char *)0x57000084);
-N            g_nWeekday = rBCDDAY;
-X            g_nWeekday = (*(volatile unsigned char *)0x57000080);
-N            g_nDate    = rBCDDATE;
-X            g_nDate    = (*(volatile unsigned char *)0x5700007c);
-N            g_nHour    = rBCDHOUR;
-X            g_nHour    = (*(volatile unsigned char *)0x57000078);
-N            g_nMin     = rBCDMIN;
-X            g_nMin     = (*(volatile unsigned char *)0x57000074);
-N            g_nSec     = rBCDSEC;
-X            g_nSec     = (*(volatile unsigned char *)0x57000070);
-N       
-N        uart_printf(" %02x:%02x:%02x  %10s,  %02x/%02x/%04x\r",g_nHour,g_nMin,g_nSec,day[g_nWeekday],g_nMonth,g_nDate,g_nYear);
-N
+N	g_nYear =rBCDYEAR;
+X	g_nYear =(*(volatile unsigned char *)0x57000088);
+N	g_nMonth   = rBCDMON;
+X	g_nMonth   = (*(volatile unsigned char *)0x57000084);
+N	g_nWeekday = rBCDDAY;
+X	g_nWeekday = (*(volatile unsigned char *)0x57000080);
+N	g_nDate    = rBCDDATE;
+X	g_nDate    = (*(volatile unsigned char *)0x5700007c);
+N	g_nHour    = rBCDHOUR;
+X	g_nHour    = (*(volatile unsigned char *)0x57000078);
+N	g_nMin     = rBCDMIN;
+X	g_nMin     = (*(volatile unsigned char *)0x57000074);
+N	g_nSec     = rBCDSEC;
+X	g_nSec     = (*(volatile unsigned char *)0x57000070);
+N  uart_printf(" %02x:%02x:%02x  %10s,  %02x/%02x/%04x\r",g_nHour,g_nMin,g_nSec,day[g_nWeekday],g_nMonth,g_nDate,g_nYear);
 N	rRTCCON = 0x0;					// No reset, Merge BCD counters, 1/32768, RTC Control disable(for power consumption)
 X	(*(volatile unsigned char *)0x57000040) = 0x0;					
-N    
-N    uart_printf("\n\n Exit display.\n");
 N	 
-N		net_handle();
-N		time_skb_reserve(skb);
-N		time_send(skb, g_nYear,g_nMonth,g_nDate,g_nWeekday,g_nHour,g_nMin,g_nSec);	//192.168.2.66:3538
+N	net_handle(skb);
+N	time_skb_reserve(skb);
+N	time_send(skb, g_nYear,g_nMonth,g_nDate,g_nWeekday,g_nHour,g_nMin,g_nSec);	//192.168.2.66:3538
 N	
-N/*	TftpLoadEnd  = 0;
-N	TftpPutMark  = 0;
-N	TftpPutBegin = 0;
-N	
-N	download_addr = 0x30008000;
-N	download_len = 0;
-N	
-N	while (!TftpLoadEnd) {		
-N		net_handle();
-N		if(TftpPutBegin) {
-N			uart_printf("Starting the TFTP download...\n");
-N			TftpPutBegin = 0;
-N		}
-N		if(TftpPutMark) {
-N			uart_sendbyte('.');
-N			TftpPutMark = 0;
-N		}
-N	}
-N
-N	if(TftpLoadEnd) {
-N		uart_printf("\ndownload 0x%x bytes to 0x%08x\n\n", download_len, download_addr);
-N	p=(char *)download_addr;
-N	for(i=0;i<download_len;i++)
-N		uart_printf("%c",p[i]);
-N    uart_printf("\nPress any key to continue...\n");
-N    while(!uart_getkey());
-N	return download_len;
-N	}*/
-N
 N	return 0;
-W "Source\tftp\tftpmain.c" 63 6 variable "i" was declared but never referenced
-W "Source\tftp\tftpmain.c" 64 17 variable "p" was declared but never referenced
+W "Source\tftp\tftpmain.c" 90 6 variable "i" was declared but never referenced
+W "Source\tftp\tftpmain.c" 91 17 variable "p" was declared but never referenced
 N}
 N
 N

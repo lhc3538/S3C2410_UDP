@@ -28,7 +28,7 @@
 ;;;18     	struct timehdr *time_hdr;
 ;;;19     
 ;;;20     	time_hdr = (struct timehdr *)skb_push(skb, sizeof(struct timehdr));
-000020  e3a01008          MOV      r1,#8
+000020  e3a0100a          MOV      r1,#0xa
 000024  e59d0000          LDR      r0,[sp,#0]
 000028  ebfffffe          BL       skb_push
 00002c  e1a04000          MOV      r4,r0
@@ -44,53 +44,46 @@
 000040  e5c46004          STRB     r6,[r4,#4]
 ;;;26     	time_hdr->time_data[5] = g_nDate;
 000044  e5c47005          STRB     r7,[r4,#5]
-;;;27     	time_hdr->time_data[6] = g_nYear;
-000048  e5c45006          STRB     r5,[r4,#6]
-;;;28     	uart_printf("year: %d\n",g_nYear);
-00004c  e1a01005          MOV      r1,r5
-000050  e28f0048          ADR      r0,|L1.160|
-000054  ebfffffe          BL       uart_printf
+;;;27     	time_hdr->year = g_nYear;
+000048  e2841006          ADD      r1,r4,#6
+00004c  e1a00005          MOV      r0,r5
+000050  ebfffffe          BL       __aeabi_uwrite4
+;;;28     	//uart_printf("year: %d\n",g_nYear);
 ;;;29     	udp_send(skb, 3232236098, UDP,3538);
-000058  e59f304c          LDR      r3,|L1.172|
-00005c  e3a02011          MOV      r2,#0x11
-000060  e59f1048          LDR      r1,|L1.176|
-000064  e59d0000          LDR      r0,[sp,#0]
-000068  ebfffffe          BL       udp_send
+000054  e59f3040          LDR      r3,|L1.156|
+000058  e3a02011          MOV      r2,#0x11
+00005c  e59f103c          LDR      r1,|L1.160|
+000060  e59d0000          LDR      r0,[sp,#0]
+000064  ebfffffe          BL       udp_send
 ;;;30     
 ;;;31     	return 0;
-00006c  e3a00000          MOV      r0,#0
-000070  e28dd010          ADD      sp,sp,#0x10
-000074  e8bd5ff0          POP      {r4-r12,lr}
+000068  e3a00000          MOV      r0,#0
+00006c  e28dd010          ADD      sp,sp,#0x10
+000070  e8bd5ff0          POP      {r4-r12,lr}
 ;;;32     }
-000078  e12fff1e          BX       lr
+000074  e12fff1e          BX       lr
 ;;;33     
                           ENDP
 
                   time_skb_reserve PROC
 ;;;34     void time_skb_reserve(struct sk_buff *skb)
-00007c  e92d4010          PUSH     {r4,lr}
+000078  e92d4010          PUSH     {r4,lr}
 ;;;35     {
-000080  e1a04000          MOV      r4,r0
+00007c  e1a04000          MOV      r4,r0
 ;;;36     	udp_skb_reserve(skb);
-000084  e1a00004          MOV      r0,r4
-000088  ebfffffe          BL       udp_skb_reserve
+000080  e1a00004          MOV      r0,r4
+000084  ebfffffe          BL       udp_skb_reserve
 ;;;37     	skb_reserve(skb, sizeof(struct timehdr));
-00008c  e3a01008          MOV      r1,#8
-000090  e1a00004          MOV      r0,r4
-000094  ebfffffe          BL       skb_reserve
+000088  e3a0100a          MOV      r1,#0xa
+00008c  e1a00004          MOV      r0,r4
+000090  ebfffffe          BL       skb_reserve
 ;;;38     }
-000098  e8bd4010          POP      {r4,lr}
-00009c  e12fff1e          BX       lr
+000094  e8bd4010          POP      {r4,lr}
+000098  e12fff1e          BX       lr
 ;;;39     
                           ENDP
 
-                  |L1.160|
-0000a0  79656172          DCB      "year: %d\n",0
-0000a4  3a202564
-0000a8  0a00    
-0000aa  00                DCB      0
-0000ab  00                DCB      0
-                  |L1.172|
+                  |L1.156|
                           DCD      0x00000dd2
-                  |L1.176|
+                  |L1.160|
                           DCD      0xc0a80242

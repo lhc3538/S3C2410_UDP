@@ -399,8 +399,7 @@ N	ip_hdr->saddr = htonl(local_ip);
 N	ip_hdr->daddr = htonl(ip);	
 N	ip_hdr->check = ip_fast_csum((unsigned char *)ip_hdr,ip_hdr->ihl);
 N
-W "Source\tftp\ip.c" 95 2 function "uart_printf" declared implicitly
-N	uart_printf("ethlen: %d\n",skb->len);
+N	//uart_printf("ethlen: %d\n",skb->len);
 N	eth_send(skb, dest_eth_addr, ETH_P_IP);
 X	eth_send(skb, dest_eth_addr, 0x0800);
 N

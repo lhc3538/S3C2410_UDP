@@ -3,5 +3,6 @@
 .\SDRAM\udp.o: .\INC\tftp\eth.h
 .\SDRAM\udp.o: .\INC\tftp\ip.h
 .\SDRAM\udp.o: .\INC\tftp\udp.h
+.\SDRAM\udp.o: .\INC\tftp\time.h
 .\SDRAM\udp.o: .\INC\tftp\tftp.h
 .\SDRAM\udp.o: .\INC\utils.h

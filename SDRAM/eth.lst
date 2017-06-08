@@ -156,8 +156,7 @@ N	memcpy((unsigned char *)eth_hdr->h_source, local_eth_addr, ETH_ALEN);
 X	memcpy((unsigned char *)eth_hdr->h_source, local_eth_addr, 6);
 N	eth_hdr->h_proto = htons(proto);
 N	
-W "Source\tftp\eth.c" 25 2 function "uart_printf" declared implicitly
-N	uart_printf("dm9000len: %d\n",skb->len);
+N	//uart_printf("dm9000len: %d\n",skb->len);
 N	return dm9000_send(skb->data, skb->len);
 N}
 N

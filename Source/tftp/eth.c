@@ -22,7 +22,7 @@ int eth_send(struct sk_buff *skb, unsigned char *dest_addr, unsigned short proto
 	memcpy((unsigned char *)eth_hdr->h_source, local_eth_addr, ETH_ALEN);
 	eth_hdr->h_proto = htons(proto);
 	
-	uart_printf("dm9000len: %d\n",skb->len);
+	//uart_printf("dm9000len: %d\n",skb->len);
 	return dm9000_send(skb->data, skb->len);
 }
 
